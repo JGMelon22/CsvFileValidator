@@ -95,10 +95,12 @@ public class CsvValidatorService
 
     private static string AdjustPhone(string phone)
     {
-        if (!string.IsNullOrWhiteSpace(phone) && !phone.StartsWith("55"))
-            phone = "55" + phone;
+        string digitsOnly = new string(phone.Where(char.IsDigit).ToArray());
 
-        return phone;
+        if (!digitsOnly.StartsWith("55"))
+            digitsOnly = "55" + digitsOnly;
+
+        return digitsOnly;
     }
 
     private static Gender? MapGender(string genderValue)
@@ -107,7 +109,7 @@ public class CsvValidatorService
         {
             "FEMININO" => Gender.Feminino,
             "MASCULINO" => Gender.Masculino,
-            _ => null
+            _ => (Gender?)(-1)
         };
     }
 
@@ -145,18 +147,22 @@ public class CsvValidatorService
 
     private static List<string> ValidatePhone(string phone)
     {
-        string phoneWithoutPrefix = phone.StartsWith("55")
-            ? phone.Substring(2)
-            : phone;
+        string phoneWithoutPrefix = phone;
+        if (phone.StartsWith("55") && phone.Length >= 3)
+            phoneWithoutPrefix = phone.Substring(2);
 
-        return !string.IsNullOrWhiteSpace(phoneWithoutPrefix) && !Regex.IsMatch(phoneWithoutPrefix, @"^\d{11}$")
-            ? new List<string> { "Telefone deve conter exatamente 11 dígitos, incluindo o DDD." }
-            : [];
+        return !string.IsNullOrWhiteSpace(phoneWithoutPrefix) &&
+                   !Regex.IsMatch(phoneWithoutPrefix, @"^\d{10,11}$")
+                ? new List<string> { "Telefone deve conter 10 ou 11 dígitos, incluindo o DDD (após o código do país 55)." }
+                : [];
     }
 
     private static List<string> ValidateGender(Gender? gender)
     {
-        return gender.HasValue && gender != Gender.Feminino && gender != Gender.Masculino
+        if (!gender.HasValue)
+            return new List<string>();
+
+        return gender != Gender.Feminino && gender != Gender.Masculino
             ? new List<string> { "Gênero deve ser 'FEMININO' ou 'MASCULINO'." }
             : [];
     }
