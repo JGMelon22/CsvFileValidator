@@ -5,10 +5,7 @@
 <ul>
     <li>Projeto Base
         <ul>
-            <li><a href="https://github.com/shouldly/shouldly">CsvHelper<a/></li>
-            <li>MediatR</li>
-            <li>Refit.HttpClientFactory</li>
-            <li>Swashbuckle.AspNetCore</li>
+            <li><a href="https://joshclose.github.io/CsvHelper/">CsvHelper<a/></li>
         </ul>
     </li></br>
     <li>Testes Unitários
