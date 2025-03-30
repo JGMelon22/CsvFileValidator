@@ -17,7 +17,21 @@ public class CsvValidatorServiceTests
         // Assert
         errors.ShouldBeEmpty();
     }
-    
+
+    [Fact]
+    public void Should_ReturnFileExtensionError_When_FileDiffersOfCsv()
+    {
+        // Arrange
+        string fileExtension = ".csv";
+        string filePath = Path.Combine("TestFiles", "invalid_file_extension.txt");
+
+        // Act
+        List<string> errors = new CsvValidatorService().ValidateCsv(filePath);
+
+        // Assert
+        errors.ShouldContain($"Apenas arquivos {fileExtension.ToUpper()} são permitidos.");
+    }
+
     [Fact]
     public void Should_ReturnHeaderErrors_When_MissingRequiredHeaders()
     {
@@ -57,7 +71,6 @@ public class CsvValidatorServiceTests
         errors.ShouldContain(error => error.Contains("CPF deve conter apenas números e ter 11 dígitos."));
     }
 
-    // Test for invalid phone number length
     [Fact]
     public void Should_ReturnPhoneError_When_InvalidPhoneNumberLength()
     {
@@ -71,7 +84,6 @@ public class CsvValidatorServiceTests
         errors.ShouldContain(error => error.Contains("Telefone deve conter 10 ou 11 dígitos, incluindo o DDD (após o código do país 55)."));
     }
 
-    // Test for invalid gender value
     [Fact]
     public void Should_ReturnGenderError_When_InvalidGenderValue()
     {

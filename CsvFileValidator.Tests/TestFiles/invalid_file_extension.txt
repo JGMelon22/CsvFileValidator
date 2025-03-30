@@ -1,0 +1,6 @@
+firstname;lastname;email;cpf;phone;gender;birthDay
+Roberto;Almeida;roberto.almeida@email.com;87654321098;21998765432;MASCULINO;18/03/1988
+Camila;Pereira;camila.pereira@email.com;23456789012;11987651234;FEMININO;29/11/1992
+Diego;Martins;diego.martins@email.com;34567890123;51912387654;MASCULINO;07/06/1980
+Fernanda;Rodrigues;fernanda.rodrigues@email.com;45678901234;41997654321;FEMININO;14/08/1975
+Bruno;Cardoso;bruno.cardoso@email.com;56789012345;31988776655;MASCULINO;02/01/1993

@@ -10,21 +10,14 @@ namespace CsvFileValidator.Infrastructure.Services;
 
 public class CsvValidatorService
 {
+    const string FileExtension = ".csv";
+    const long MaxAllowedFileSize = 1 * 1024 * 1024; // 1MB
+
     public List<string> ValidateCsv(string filePath)
     {
-        List<string> errors = new();
-
-        if (Path.GetExtension(filePath).ToLower() != ".csv")
-        {
-            errors.Add("Apenas arquivos CSV são permitidos.");
+        List<string> errors = ValidateFile(filePath, FileExtension, MaxAllowedFileSize);
+        if (errors.Any())
             return errors;
-        }
-
-        if (!File.Exists(filePath))
-        {
-            errors.Add("Arquivo não encontrado.");
-            return errors;
-        }
 
         try
         {
@@ -61,6 +54,31 @@ public class CsvValidatorService
         catch (Exception ex)
         {
             errors.Add($"Erro durante a validação: {ex.Message}");
+        }
+
+        return errors;
+    }
+
+    private static List<string> ValidateFile(string filePath, string expectedExtension, long maxSizeInBytes)
+    {
+        List<string> errors = new();
+
+        if (Path.GetExtension(filePath).ToLower() != expectedExtension)
+        {   
+            errors.Add($"Apenas arquivos {expectedExtension.ToUpper()} são permitidos.");
+            return errors;
+        }
+
+        if (!File.Exists(filePath))
+        {
+            errors.Add("Arquivo não encontrado.");
+            return errors;
+        }
+
+        FileInfo fileInfo = new(filePath);
+        if (fileInfo.Length > maxSizeInBytes)
+        {
+            errors.Add("Arquivo excede o limite de tamanho.");
         }
 
         return errors;
